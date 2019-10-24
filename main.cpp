@@ -6,6 +6,7 @@ int main(){
 
     auto* repositorio = new Repositorio<Transaccion>("sample_data.csv");
     repositorio->mostrarElementos();
+    repositorio->listarTransacciones();
 
     return 0;
 }

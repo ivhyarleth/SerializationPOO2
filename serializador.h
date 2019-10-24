@@ -17,7 +17,7 @@ public:
     Serializador();
     ~Serializador();
     vector<T*>* getElementos();
-    virtual string Serializar(T*, char) = 0;
+    virtual string Serializar(T*, string) = 0;
 };
 
 template <class T>
@@ -33,7 +33,7 @@ Serializador<T>::~Serializador() {
 }
 
 template <class T>
-std::vector<T*>* Serializador<T>::getElementos() {
+vector<T*>* Serializador<T>::getElementos() {
     return elementos;
 }
 #endif //PROJECT2_SERIALIZADOR_H

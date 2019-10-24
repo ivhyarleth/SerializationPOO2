@@ -17,10 +17,12 @@ class Repositorio {
 private:
     Deserializador<T>* deserializador;
     Serializador<T>* serializador;
+    void listar(const string&);
 public:
     Repositorio(const std::string&);
     ~Repositorio();
     void mostrarElementos();
+    void listarTransacciones();
 };
 
 template <class T>
@@ -28,7 +30,7 @@ Repositorio<T>::Repositorio(const string& nombreArchivo) {
     deserializador = new DeserializadorTransaccion();
     serializador = new SerializadorTransaccion<T>();
 
-    fstream* archivo = new std::fstream(nombreArchivo, std::ios_base::in);
+    fstream* archivo = new fstream(nombreArchivo,ios_base::in);
     string linea;
     getline(*archivo,linea);
 
@@ -62,5 +64,30 @@ void Repositorio<T>::mostrarElementos() {
         cout << transaccion->getCategory() << endl;
     }
 }
+template <class T>
+void Repositorio<T>::listar(const string& nombreArchivo) {
+    fstream* archivo = new fstream(nombreArchivo, ios_base::out);
+    if (archivo) {
+        for (Transaccion* transaccion : *deserializador->getElementos()) {
+                *archivo << serializador->Serializar(transaccion,",") << endl;
+                cout << transaccion->getCountryArea() <<" ";
+                cout << transaccion->getYear()<<" ";
+                cout << transaccion->getCode()<<" ";
+                cout << transaccion->getCommodity()<<" ";
+                cout << transaccion->getFlow()<<" ";
+                cout << transaccion->getTradeUsd()<<" ";
+                cout << transaccion->getWeight()<<" ";
+                cout << transaccion->getQuantityName()<<" ";
+                cout << transaccion->getQuantity()<<" ";
+                cout << transaccion->getCategory()<<" "<<endl;
+        }
+        archivo->close();
+    }
+    delete archivo;
+}
 
+template <class T>
+void Repositorio<T>::listarTransacciones() {
+    listar("new1.csv");
+}
 #endif //PROJECT2_REPOSITORIO_H
