@@ -18,12 +18,44 @@ private:
     Deserializador<T>* deserializador;
     Serializador<T>* serializador;
     void listar(const string&);
+    int partition(int inicio, int final);
+    vector<T*>* elementos;
 public:
     Repositorio(const std::string&);
+    int size();
     ~Repositorio();
     void mostrarElementos();
     void listarTransacciones();
+    void ordenarConQuicksort(int inicio, int final);
 };
+
+template <class T>
+int Repositorio<T>::size() {
+    return deserializador->getElementos()->size();
+}
+
+template <class T>
+int Repositorio<T>::partition(int inicio, int final) {
+    int x = elementos->at(final)->getTradeUsd();
+    int i = inicio-1;
+    for(int j = inicio; j < final; j++) {
+        if(elementos->at(j)->getTradeUsd() < x) {
+            i++;
+            iter_swap(elementos->operator[](i), elementos->operator[](j));
+        }
+    }
+    iter_swap(elementos->operator[](i+1), elementos->operator[](final));
+    return i+1;
+}
+
+template<class T>
+void Repositorio<T>::ordenarConQuicksort(int inicio, int final) {
+    if(inicio<final) {
+        int p = partition(inicio, final);
+        ordenarConQuicksort(inicio, p-1);
+        ordenarConQuicksort(p+1,final);
+    }
+}
 
 template <class T>
 Repositorio<T>::Repositorio(const string& nombreArchivo) {
@@ -41,6 +73,7 @@ Repositorio<T>::Repositorio(const string& nombreArchivo) {
         }
         archivo->close();
     }
+    elementos = deserializador->getElementos();
     delete archivo;
 }
 
@@ -54,6 +87,7 @@ template <class T>
 void Repositorio<T>::mostrarElementos() {
     for (auto transaccion : *deserializador->getElementos()) {
         cout << transaccion->getCountryArea() << " ";
+        cout << transaccion->getYear() << " ";
         cout << transaccion->getCode() << " ";
         cout << transaccion->getCommodity() << " ";
         cout << transaccion->getFlow() << " ";
