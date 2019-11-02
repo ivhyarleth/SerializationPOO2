@@ -34,7 +34,7 @@ Transaccion* DeserializadorTransaccion::deserializar(const string& informacion ,
         int code = stoi(campos[2]);
         string commodity = campos[3];
         string flow = campos[4];
-        int trade_usd = stoi(campos[5]);
+        long long int trade_usd = stoll(campos[5]);
         string weight = campos[6];
         string quantity_name = campos[7];
         string quantity = campos[8];
