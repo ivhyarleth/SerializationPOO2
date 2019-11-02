@@ -16,13 +16,13 @@ protected:
     int code;
     string commodity;
     string flow;
-    int trade_usd;
+    long long int trade_usd;
     string weight;
     string quantity_name;
     string quantity;
     string category;
 public:
-    Transaccion(const string &, int, int, const string &c, const string &, int,  const string & , const string &,  const string &, const string &);
+    Transaccion(const string &, int, int, const string &c, const string &, long long int,  const string & , const string &,  const string &, const string &);
 
     virtual ~Transaccion();
     const string &getCountryArea() const;
@@ -30,7 +30,7 @@ public:
     int getCode() const;
     const string &getCommodity() const;
     const string &getFlow() const;
-    int getTradeUsd() const;
+    long long int getTradeUsd() const;
     const string &getWeight() const;
     const string &getQuantityName() const;
     const string &getQuantity() const;
@@ -41,7 +41,7 @@ public:
 
 
 Transaccion::Transaccion(const string &countryArea, int year, int code, const string &commodity, const string &flow,
-                         int tradeUsd, const string &weight, const string &quantityName, const string &quantity,
+                         long long int tradeUsd, const string &weight, const string &quantityName, const string &quantity,
                          const string &category) : countryArea(countryArea), year(year), code(code),
                                                    commodity(commodity), flow(flow), trade_usd(tradeUsd),
                                                    weight(weight), quantity_name(quantityName), quantity(quantity),
@@ -68,7 +68,7 @@ const string& Transaccion::getFlow() const {
     return flow;
 }
 
-int Transaccion::getTradeUsd() const {
+long long int Transaccion::getTradeUsd() const {
     return trade_usd;
 }
 
