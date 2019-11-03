@@ -17,8 +17,8 @@ int main(){
     //repositorio->listarCriterio1();
 
     cout<<"Sort by country_or_area, year, trade_usd: "<<endl;
-    //repositorio->listarCriterio2();
+    repositorio->listarCriterio2();
 
-    repositorio->sumatoria1();
+    //repositorio->sumatoria1();
     return 0;
 }

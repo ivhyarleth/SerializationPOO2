@@ -63,7 +63,7 @@ public:
     void heap2(int size, int node);
     void ordenarConHeapsort2(int size);
 
-    void sumatoria1();
+    //void sumatoria1();
 
 };
 
@@ -112,15 +112,15 @@ int Repositorio<T>::size() {
 
 template <class T>
 int Repositorio<T>::partition(int inicio, int final) {
-    int x = elementos->at(final)->getTradeUsd();
+    long long int x = elementos->at(final)->getTradeUsd();
     int i = inicio-1;
     for(int j = inicio; j < final; j++) {
-        if(elementos->at(j)->getTradeUsd() < x) {
+        if(elementos->at(j)->getTradeUsd() > x) {
             i++;
-            iter_swap(elementos->operator[](i), elementos->operator[](j));
+            swap(elementos->at(i), elementos->at(j));
         }
     }
-    iter_swap(elementos->operator[](i+1), elementos->operator[](final));
+    swap(elementos->at(i+1), elementos->at(final));
     return i+1;
 }
 
@@ -142,22 +142,22 @@ int Repositorio<T>::partition2(int inicio, int final ) {
     Transaccion* x = elementos->at(final);
     int i  = inicio - 1;
     for(int j = inicio; j < final; j++) {
-        if(elementos->at(j)->getCountryArea() < x->getCountryArea()) {
+        if(elementos->at(j)->getCountryArea() > x->getCountryArea()) {
             i++;
-            iter_swap(elementos->operator[](i), elementos->operator[](j));
+            swap(elementos->at(i), elementos->at(j));
         } else if ( elementos->at(j)->getCountryArea() == x->getCountryArea()) {
-            if(elementos->at(j)->getYear() < x->getYear()) {
+            if(elementos->at(j)->getYear() > x->getYear()) {
                 i++;
-                iter_swap(elementos->operator[](i), elementos->operator[](j));
+                swap(elementos->at(i), elementos->at(j));
             } else if ( elementos->at(j)->getYear() == x->getYear() ){
-                if(elementos->at(j)->getTradeUsd() < x->getTradeUsd()) {
+                if(elementos->at(j)->getTradeUsd() > x->getTradeUsd()) {
                     i++;
-                    iter_swap(elementos->operator[](i), elementos->operator[](j));
+                    swap(elementos->at(i), elementos->at(j));
                 }
             }
         }
     }
-    iter_swap(elementos->operator[](i+1), elementos->operator[](final));
+    swap(elementos->at(i+1), elementos->at(final));
     return i+1;
 }
 template<class T>
@@ -415,6 +415,8 @@ void Repositorio<T>::listarTradeUsdQ(const string& nombreArchivo) {
     fstream* archivo = new fstream(nombreArchivo, ios_base::out);
     clock_t start;
     double duration;
+    vector<T*>* desordenado = new vector<T*>*();
+    *desordenado = elementos;
     start = clock();
 
     ordenarConQuicksort(0, size()-1);
@@ -430,12 +432,15 @@ void Repositorio<T>::listarTradeUsdQ(const string& nombreArchivo) {
         archivo->close();
     }
     delete archivo;
+    delete desordenado;
 }
 
 template <class T>
 void Repositorio<T>::listarTradeUsdM(const string& nombreArchivo) {
     fstream* archivo = new fstream(nombreArchivo, ios_base::out);
     clock_t start;
+    vector<T*>* desordenado = new vector<T*>*();
+    *desordenado = elementos;
     double duration;
     start = clock();
 
@@ -452,6 +457,7 @@ void Repositorio<T>::listarTradeUsdM(const string& nombreArchivo) {
         archivo->close();
     }
     delete archivo;
+    delete desordenado;
 }
 
 template <class T>
@@ -459,6 +465,8 @@ void Repositorio<T>::listarTradeUsdS(const string& nombreArchivo) {
     fstream* archivo = new fstream(nombreArchivo, ios_base::out);
     clock_t start;
     double duration;
+    vector<T*>* desordenado = new vector<T*>*();
+    *desordenado = elementos;
     start = clock();
 
     ordenarConShellsort(elementos->size());
@@ -474,12 +482,15 @@ void Repositorio<T>::listarTradeUsdS(const string& nombreArchivo) {
         archivo->close();
     }
     delete archivo;
+    delete desordenado;
 }
 
 template <class T>
 void Repositorio<T>::listarTradeUsdH(const string& nombreArchivo) {
     fstream* archivo = new fstream(nombreArchivo, ios_base::out);
     clock_t start;
+    vector<T*>* desordenado = new vector<T*>*();
+    *desordenado = elementos;
     double duration;
     start = clock();
 
@@ -496,14 +507,16 @@ void Repositorio<T>::listarTradeUsdH(const string& nombreArchivo) {
         archivo->close();
     }
     delete archivo;
+    delete desordenado;
 }
 
 template <class T>
 void Repositorio<T>::listarCriterio1() {
+
     listarTradeUsdQ("quicksortcriterio1.csv");
     listarTradeUsdM("mergesortcriterio1.csv");
-    listarTradeUsdS("shellsortcriterio1.csv");
-    listarTradeUsdH("heapsortcriterio1.csv");
+    //listarTradeUsdS("shellsortcriterio1.csv");
+    //listarTradeUsdH("heapsortcriterio1.csv");
 }
 
 // Listar segundo criterio:
@@ -512,6 +525,8 @@ template <class T>
 void Repositorio<T>::listarColumnas(const string& nombreArchivo) {
     fstream* archivo = new fstream(nombreArchivo, ios_base::out);
     clock_t start;
+    vector<T*>* desordenado = new vector<T*>*();
+    *desordenado = elementos;
     double duration;
     start = clock();
 
@@ -528,12 +543,15 @@ void Repositorio<T>::listarColumnas(const string& nombreArchivo) {
         archivo->close();
     }
     delete archivo;
+    delete desordenado;
 }
 
 template <class T>
 void Repositorio<T>::listarColumnas2(const string& nombreArchivo) {
     fstream* archivo = new fstream(nombreArchivo, ios_base::out);
     clock_t start;
+    vector<T*>* desordenado = new vector<T*>*();
+    *desordenado = elementos;
     double duration;
     start = clock();
 
@@ -550,12 +568,15 @@ void Repositorio<T>::listarColumnas2(const string& nombreArchivo) {
         archivo->close();
     }
     delete archivo;
+    delete desordenado;
 }
 
 template <class T>
 void Repositorio<T>::listarColumnas3(const string& nombreArchivo) {
     fstream* archivo = new fstream(nombreArchivo, ios_base::out);
     clock_t start;
+    vector<T*>* desordenado = new vector<T*>*();
+    *desordenado = elementos;
     double duration;
     start = clock();
 
@@ -572,6 +593,7 @@ void Repositorio<T>::listarColumnas3(const string& nombreArchivo) {
         archivo->close();
     }
     delete archivo;
+    delete desordenado;
 }
 
 
@@ -579,9 +601,10 @@ template <class T>
 void Repositorio<T>::listarColumnas4(const string& nombreArchivo) {
     fstream* archivo = new fstream(nombreArchivo, ios_base::out);
     clock_t start;
+    vector<T*>* desordenado = new vector<T*>*();
+    *desordenado = elementos;
     double duration;
     start = clock();
-
     ordenarConHeapsort2(elementos->size());
 
     duration = (clock() - start)/(double) CLOCKS_PER_SEC;
@@ -595,39 +618,40 @@ void Repositorio<T>::listarColumnas4(const string& nombreArchivo) {
         archivo->close();
     }
     delete archivo;
+    delete desordenado;
 }
 template <class T>
 void Repositorio<T>::listarCriterio2() {
     listarColumnas("quicksortcriterio2.csv");
-    listarColumnas2("mergesortcriterio2.csv");
-    listarColumnas3("shellsortcriterio2.csv");
-    listarColumnas4("heapsortcriterio2.csv");
+    //listarColumnas2("mergesortcriterio2.csv");
+//    listarColumnas3("shellsortcriterio2.csv");
+//    listarColumnas4("heapsortcriterio2.csv");
 }
 
 
-//                                              SUMATORIAS
-
-template <class T>
-void Repositorio<T>::listarMap(const string& fileName, const map<string, long long int>& map) {
-    fstream* file = new fstream(fileName, ios_base::out); /* Crea el archivo donde se guardará el map*/
-    if (file) {
-        for (auto it = map.begin(); it != map.end(); it++) { /* Crea un iterador para recorrer el map e imprimir */
-            *file << it->first << ", " << it->second << std::endl; /* first: double or triple key, second: value */
-        }
-        file->close();
-    }
-    delete file;
-}
-template <class T>
-void Repositorio<T>::sumatoria1() {
-
-    auto* map = new std::map<string, long long int>(); /* Se asigna memoria en heap para el map */
-
-    /* Recorre el vector de records y sumariza el trade_usd por la respectiva doble llave */
-    for (auto *elemento : *deserializador->getElementos()){
-        (*map)[elementos->getCountryArea()+ ", " + to_string(elementos->getYear())] += elementos->getTradeUsd();
-    }
-    listarMap("total_trade_by_country_year.csv", *map); /* Llama al método printMap para guardar el map en un archivo */
-    delete map;
-}
+////                                              SUMATORIAS
+//
+//template <class T>
+//void Repositorio<T>::listarMap(const string& fileName, const map<string, long long int>& map) {
+//    fstream* file = new fstream(fileName, ios_base::out); /* Crea el archivo donde se guardará el map*/
+//    if (file) {
+//        for (auto it = map.begin(); it != map.end(); it++) { /* Crea un iterador para recorrer el map e imprimir */
+//            *file << it->first << ", " << it->second << std::endl; /* first: double or triple key, second: value */
+//        }
+//        file->close();
+//    }
+//    delete file;
+//}
+//template <class T>
+//void Repositorio<T>::sumatoria1() {
+//
+//    auto* map = new std::map<string, long long int>(); /* Se asigna memoria en heap para el map */
+//
+//    /* Recorre el vector de records y sumariza el trade_usd por la respectiva doble llave */
+//    for (auto *elemento : *deserializador->getElementos()){
+//        (*map)[elementos->getCountryArea()+ ", " + to_string(elementos->getYear())] += elementos->getTradeUsd();
+//    }
+//    listarMap("total_trade_by_country_year.csv", *map); /* Llama al método printMap para guardar el map en un archivo */
+//    delete map;
+//}
 #endif //PROJECT2_REPOSITORIO_H
