@@ -30,7 +30,7 @@ Transaccion* DeserializadorTransaccion::deserializar(const string& informacion ,
 
     if (campos.size() == 10){
         string countryArea = campos[0];
-        int year = stoi(campos[1]);
+        string year = campos[1];
         int code = stoi(campos[2]);
         string commodity = campos[3];
         string flow = campos[4];

@@ -12,7 +12,7 @@ using namespace std;
 class Transaccion{
 protected:
     string countryArea;
-    int year;
+    string year;
     int code;
     string commodity;
     string flow;
@@ -22,11 +22,11 @@ protected:
     string quantity;
     string category;
 public:
-    Transaccion(const string &, int, int, const string &c, const string &, long long int,  const string & , const string &,  const string &, const string &);
+    Transaccion(const string &, const string &, int, const string &c, const string &, long long int,  const string & , const string &,  const string &, const string &);
 
     virtual ~Transaccion();
     const string &getCountryArea() const;
-    int getYear() const;
+    const string & getYear() const;
     int getCode() const;
     const string &getCommodity() const;
     const string &getFlow() const;
@@ -40,7 +40,7 @@ public:
 };
 
 
-Transaccion::Transaccion(const string &countryArea, int year, int code, const string &commodity, const string &flow,
+Transaccion::Transaccion(const string &countryArea, const string & year, int code, const string &commodity, const string &flow,
                          long long int tradeUsd, const string &weight, const string &quantityName, const string &quantity,
                          const string &category) : countryArea(countryArea), year(year), code(code),
                                                    commodity(commodity), flow(flow), trade_usd(tradeUsd),
@@ -52,7 +52,7 @@ const string& Transaccion::getCountryArea() const {
     return countryArea;
 }
 
-int Transaccion::getYear() const {
+const string & Transaccion::getYear() const {
     return year;
 }
 

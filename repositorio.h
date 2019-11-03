@@ -41,10 +41,8 @@ public:
     int size();
     ~Repositorio();
 
-
     void listarCriterio1();
     void listarCriterio2();
-
 
     void ordenarConQuicksort(vector<T*> &transacciones, int inicio, int final);
     void ordenarConQuicksort2(vector<Transaccion*> &transacciones, int inicio, int final);
@@ -61,6 +59,10 @@ public:
     void ordenarConHeapsort(int size);
     void heap2(int size, int node);
     void ordenarConHeapsort2(int size);
+
+    void printMap(string nombreArchivo, map<string, long long int> mapa);
+    void printTotalTradeUsdByCountryOrArea_year();
+    void printTotalTradeUsdByCountryOrAreaYearFlow();
 
 };
 
@@ -170,50 +172,50 @@ void Repositorio<T>::ordenarConQuicksort2(vector<Transaccion*> &transacciones, i
 
 template <class T>
 void Repositorio<T>::merge(vector<T*> &transacciones , int left, int middle, int right){
-        int i,j,k;
-        int n1 = middle - left + 1;
-        int n2 = right - middle;
-        vector<Transaccion*> L(n1);
-        vector<Transaccion*> R(n2);
-        for (i = 0; i < n1; ++i)
-            L[i] = transacciones[left + i];
-        for (j = 0; j < n2; ++j)
-            R[j] = transacciones[middle + 1 + j];
-        i = 0;
-        j = 0;
-        k = left;
-        while (i < n1 && j < n2) {
-            if (L[i]->getTradeUsd() >= R[j]->getTradeUsd()) {
-                transacciones[k] = L[i];
-                i++;
-            }
-            else {
-                transacciones[k] = R[j];
-                j++;
-            }
-            k++;
-        }
-        while (i < n1) {
-            transacciones[k]= L[i];
+    int i,j,k;
+    int n1 = middle - left + 1;
+    int n2 = right - middle;
+    vector<Transaccion*> L(n1);
+    vector<Transaccion*> R(n2);
+    for (i = 0; i < n1; ++i)
+        L[i] = transacciones[left + i];
+    for (j = 0; j < n2; ++j)
+        R[j] = transacciones[middle + 1 + j];
+    i = 0;
+    j = 0;
+    k = left;
+    while (i < n1 && j < n2) {
+        if (L[i]->getTradeUsd() >= R[j]->getTradeUsd()) {
+            transacciones[k] = L[i];
             i++;
-            k++;
         }
-        while (j < n2) {
-            transacciones[k]= R[j];
+        else {
+            transacciones[k] = R[j];
             j++;
-            k++;
         }
+        k++;
+    }
+    while (i < n1) {
+        transacciones[k]= L[i];
+        i++;
+        k++;
+    }
+    while (j < n2) {
+        transacciones[k]= R[j];
+        j++;
+        k++;
+    }
 }
 
 template <class T>
 void Repositorio<T>::ordenarConMergesort(vector<T*> &transacciones , int left, int right){
 
-        if (left < right) {
-            int middle = left + (right - left) / 2;
-            ordenarConMergesort(transacciones, left, middle);
-            ordenarConMergesort(transacciones, middle + 1, right);
-            merge( transacciones, left, middle, right);
-        }
+    if (left < right) {
+        int middle = left + (right - left) / 2;
+        ordenarConMergesort(transacciones, left, middle);
+        ordenarConMergesort(transacciones, middle + 1, right);
+        merge( transacciones, left, middle, right);
+    }
 }
 
 // Mergesort criterio 2:
@@ -373,7 +375,6 @@ void Repositorio<T>::ordenarConHeapsort2(int size){
 }
 
 
-
 //                                                    Funciones de listar:
 
 // Listar primer criterio:
@@ -481,8 +482,9 @@ void Repositorio<T>::listarTradeUsdH(const string& nombreArchivo) {
 template <class T>
 void Repositorio<T>::listarCriterio1() {
 
-    listarTradeUsdM("mergesortcriterio1.csv");
     listarTradeUsdQ("quicksortcriterio1.csv");
+    listarTradeUsdM("mergesortcriterio1.csv");
+
     //listarTradeUsdS("shellsortcriterio1.csv");
     //listarTradeUsdH("heapsortcriterio1.csv");
 }
@@ -590,11 +592,55 @@ void Repositorio<T>::listarColumnas4(const string& nombreArchivo) {
 }
 template <class T>
 void Repositorio<T>::listarCriterio2() {
-    listarColumnas2("mergesortcriterio2.csv");
+
     listarColumnas("quicksortcriterio2.csv");
+    listarColumnas2("mergesortcriterio2.csv");
+
 //    listarColumnas3("shellsortcriterio2.csv");
 //    listarColumnas4("heapsortcriterio2.csv");
 }
 
+
+
+//              --------- SUMMARIZE
+
+template<class T>
+void Repositorio<T>::printMap(string nombreArchivo, map<string, long long int> mapa) {
+    fstream* archivo = new fstream(nombreArchivo, ios_base::out);
+    if (archivo) {
+        for (auto const& pair: mapa) {
+            *archivo << pair.first << " " <<  pair.second << "\n";
+        }
+        archivo->close();
+    }
+    delete archivo;
+}
+
+template<class T>
+void Repositorio<T>::printTotalTradeUsdByCountryOrArea_year() {
+
+    auto* mapa = new std::map<string, long long int>();
+
+    for (auto* record : *deserializador->getElementos()) {
+        (*mapa)[record->getCountryArea() + ", " + record->getYear()] += record->getTradeUsd();
+    }
+
+    printMap("total_trade_by_country_year.csv", *mapa);
+    delete mapa;
+}
+
+template<class T>
+void Repositorio<T>::printTotalTradeUsdByCountryOrAreaYearFlow() {
+
+    auto* mapa = new std::map<string, long long int>();
+
+
+    for (auto* record : *deserializador->getElementos()) {
+        (*mapa)[record->getCountryArea() + ", " + record->getYear() + ", " + record->getFlow()] += record->getTradeUsd();
+    }
+
+    printMap("total_trade_by_country_year_flow.csv", *mapa);
+    delete mapa;
+}
 
 #endif //PROJECT2_REPOSITORIO_H

@@ -26,7 +26,7 @@ SerializadorTransaccion<T>::~SerializadorTransaccion() {}
 template <class T>
 string SerializadorTransaccion<T>::Serializar(T* transaccion, string delim) {
     return transaccion->getCountryArea() + delim+
-            to_string(transaccion->getYear()) + delim +
+            transaccion->getYear() + delim +
             to_string(transaccion->getCode()) + delim +
            transaccion->getCommodity() + delim +
            transaccion->getFlow() + delim +
