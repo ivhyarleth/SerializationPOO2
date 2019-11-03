@@ -33,7 +33,7 @@ private:
     void listarColumnas4(const string&);
 
     int partition(vector<Transaccion*> &transacciones, int inicio, int final);
-    int partition2(int inicio, int final);
+    int partition2(vector<Transaccion*> &transacciones, int inicio, int final);
     vector<T*>* elementos;
 
 public:
@@ -47,12 +47,12 @@ public:
 
 
     void ordenarConQuicksort(vector<T*> &transacciones, int inicio, int final);
-    void ordenarConQuicksort2(int inicio, int final);
+    void ordenarConQuicksort2(vector<Transaccion*> &transacciones, int inicio, int final);
 
-    void merge(int left, int middle, int right);
-    void ordenarConMergesort(int left, int right);
-    void merge2(int left, int middle, int right);
-    void ordenarConMergesort2(int left, int right);
+    void merge(vector<T*> &transacciones, int left, int middle, int right);
+    void ordenarConMergesort(vector<T*> &transacciones, int left, int right);
+    void merge2(vector<Transaccion*> &transacciones, int left, int middle, int right);
+    void ordenarConMergesort2(vector<Transaccion*> &transacciones, int left, int right);
 
     void ordenarConShellsort(int size);
     void ordenarConShellsort2(int size);
@@ -134,34 +134,34 @@ void Repositorio<T>::ordenarConQuicksort(vector<T*> &transacciones,int inicio, i
 
 
 template <class T>
-int Repositorio<T>::partition2(int inicio, int final ) {
-    Transaccion* x = elementos->at(final);
+int Repositorio<T>::partition2(vector<Transaccion*> &transacciones, int inicio, int final ) {
+    Transaccion* x = transacciones[final];
     int i  = inicio - 1;
     for(int j = inicio; j < final; j++) {
-        if(elementos->at(j)->getCountryArea() > x->getCountryArea()) {
+        if(transacciones[j]->getCountryArea() > x->getCountryArea()) {
             i++;
-            swap(elementos->at(i), elementos->at(j));
-        } else if ( elementos->at(j)->getCountryArea() == x->getCountryArea()) {
-            if(elementos->at(j)->getYear() > x->getYear()) {
+            swap(transacciones[i], transacciones[j]);
+        } else if ( transacciones[j]->getCountryArea() == x->getCountryArea()) {
+            if(transacciones[j]->getYear() > x->getYear()) {
                 i++;
-                swap(elementos->at(i), elementos->at(j));
-            } else if ( elementos->at(j)->getYear() == x->getYear() ){
-                if(elementos->at(j)->getTradeUsd() > x->getTradeUsd()) {
+                swap(transacciones[i], transacciones[j]);
+            } else if ( transacciones[j]->getYear() == x->getYear() ){
+                if(transacciones[j]->getTradeUsd() > x->getTradeUsd()) {
                     i++;
-                    swap(elementos->at(i), elementos->at(j));
+                    swap(transacciones[i], transacciones[j]);
                 }
             }
         }
     }
-    swap(elementos->at(i+1), elementos->at(final));
+    swap(transacciones[i+1], transacciones[final]);
     return i+1;
 }
 template<class T>
-void Repositorio<T>::ordenarConQuicksort2(int inicio, int final) {
+void Repositorio<T>::ordenarConQuicksort2(vector<Transaccion*> &transacciones, int inicio, int final) {
     if(inicio<final) {
-        int p = partition2(inicio, final);
-        ordenarConQuicksort2(inicio, p-1);
-        ordenarConQuicksort2(p+1,final);
+        int p = partition2(transacciones, inicio, final);
+        ordenarConQuicksort2(transacciones , inicio , p-1);
+        ordenarConQuicksort2(transacciones, p+1, final);
     }
 }
 //                                                MERGESORT
@@ -169,67 +169,66 @@ void Repositorio<T>::ordenarConQuicksort2(int inicio, int final) {
 //Mergesort criterio 1:
 
 template <class T>
-void Repositorio<T>::merge(int left, int middle, int right){
+void Repositorio<T>::merge(vector<T*> &transacciones , int left, int middle, int right){
         int i,j,k;
         int n1 = middle - left + 1;
         int n2 = right - middle;
         vector<Transaccion*> L(n1);
         vector<Transaccion*> R(n2);
         for (i = 0; i < n1; ++i)
-            L[i] = elementos->at(left + i);
+            L[i] = transacciones[left + i];
         for (j = 0; j < n2; ++j)
-            R[j] = elementos->at(middle + 1 + j);
+            R[j] = transacciones[middle + 1 + j];
         i = 0;
         j = 0;
         k = left;
         while (i < n1 && j < n2) {
             if (L[i]->getTradeUsd() >= R[j]->getTradeUsd()) {
-                elementos->at(k) = L[i];
+                transacciones[k] = L[i];
                 i++;
             }
             else {
-                elementos->at(k) = R[j];
+                transacciones[k] = R[j];
                 j++;
             }
             k++;
         }
         while (i < n1) {
-            elementos->at(k)= L[i];
+            transacciones[k]= L[i];
             i++;
             k++;
         }
         while (j < n2) {
-            elementos->at(k)= R[j];
+            transacciones[k]= R[j];
             j++;
             k++;
         }
 }
 
 template <class T>
-void Repositorio<T>::ordenarConMergesort(int left, int right){
+void Repositorio<T>::ordenarConMergesort(vector<T*> &transacciones , int left, int right){
 
         if (left < right) {
             int middle = left + (right - left) / 2;
-            ordenarConMergesort(left, middle);
-            ordenarConMergesort(middle + 1, right);
-
-            merge(left, middle, right);
+            ordenarConMergesort(transacciones, left, middle);
+            ordenarConMergesort(transacciones, middle + 1, right);
+            merge( transacciones, left, middle, right);
         }
 }
 
 // Mergesort criterio 2:
 
 template <class T>
-void Repositorio<T>::merge2(int left, int middle, int right){
+void Repositorio<T>::merge2(vector<Transaccion*> &transacciones, int left, int middle, int right){
     int i,j,k;
     int n1 = middle - left + 1;
     int n2 = right - middle;
     vector<Transaccion*> L(n1);
     vector<Transaccion*> R(n2);
     for (i = 0; i < n1; ++i)
-        L[i] = elementos->at(left + i);
+        L[i] = transacciones[left + i];
     for (j = 0; j < n2; ++j)
-        R[j] = elementos->at(middle + 1 + j);
+        R[j] = transacciones[middle + 1 + j];
     i = 0;
     j = 0;
     k = left;
@@ -237,36 +236,36 @@ void Repositorio<T>::merge2(int left, int middle, int right){
         if (L[i]->getCountryArea() > R[j]->getCountryArea()
             || (L[i]->getCountryArea() == R[j]->getCountryArea() && L[i]->getYear() > R[j]->getYear())
             || (L[i]->getCountryArea() == R[j]->getCountryArea() && L[i]->getYear() == R[j]->getYear() && L[i]->getTradeUsd() >= R[j]->getTradeUsd())) {
-            elementos->at(k) = L[i];
+            transacciones[k] = L[i];
             i++;
         }
         else {
-            elementos->at(k) = R[j];
+            transacciones[k] = R[j];
             j++;
         }
         k++;
     }
     while (i < n1) {
-        elementos->at(k)= L[i];
+        transacciones[k]= L[i];
         i++;
         k++;
     }
     while (j < n2) {
-        elementos->at(k)= R[j];
+        transacciones[k]= R[j];
         j++;
         k++;
     }
 }
 
 template <class T>
-void Repositorio<T>::ordenarConMergesort2(int left, int right){
+void Repositorio<T>::ordenarConMergesort2(vector<Transaccion*> &transacciones, int left, int right){
 
     if (left < right) {
         int middle = left + (right - left) / 2;
-        ordenarConMergesort2(left, middle);
-        ordenarConMergesort2(middle + 1, right);
+        ordenarConMergesort2(transacciones,left, middle);
+        ordenarConMergesort2(transacciones, middle + 1, right);
 
-        merge2(left, middle, right);
+        merge2(transacciones, left, middle, right);
     }
 }
 
@@ -385,7 +384,7 @@ void Repositorio<T>::listarTradeUsdQ(const string& nombreArchivo) {
     clock_t start;
     double duration;
     vector<T*>* desordenado = new vector<T*>();
-    desordenado = elementos;
+    *desordenado = *elementos;
     start = clock();
 
     ordenarConQuicksort(*desordenado,0, size()-1);
@@ -395,7 +394,7 @@ void Repositorio<T>::listarTradeUsdQ(const string& nombreArchivo) {
     cout<<"Quicksort: "<<duration<<" seconds"<<endl;
 
     if (archivo) {
-        for (Transaccion* transaccion : *deserializador->getElementos()) {
+        for (Transaccion* transaccion : *desordenado) {
             *archivo << serializador->Serializar(transaccion,",") << endl;
         }
         archivo->close();
@@ -409,18 +408,18 @@ void Repositorio<T>::listarTradeUsdM(const string& nombreArchivo) {
     fstream* archivo = new fstream(nombreArchivo, ios_base::out);
     clock_t start;
     vector<T*>* desordenado = new vector<T*>();
-    *desordenado = elementos;
+    *desordenado = *elementos;
     double duration;
     start = clock();
 
-    ordenarConMergesort(0, elementos->size()-1);
+    ordenarConMergesort(*desordenado,0, elementos->size()-1);
 
     duration = (clock() - start)/(double) CLOCKS_PER_SEC;
 
     cout<<"Mergesort: "<<duration<<" seconds"<<endl;
 
     if (archivo) {
-        for (Transaccion* transaccion : *deserializador->getElementos()) {
+        for (Transaccion* transaccion : *desordenado) {
             *archivo << serializador->Serializar(transaccion,",") << endl;
         }
         archivo->close();
@@ -482,8 +481,8 @@ void Repositorio<T>::listarTradeUsdH(const string& nombreArchivo) {
 template <class T>
 void Repositorio<T>::listarCriterio1() {
 
+    listarTradeUsdM("mergesortcriterio1.csv");
     listarTradeUsdQ("quicksortcriterio1.csv");
-    //listarTradeUsdM("mergesortcriterio1.csv");
     //listarTradeUsdS("shellsortcriterio1.csv");
     //listarTradeUsdH("heapsortcriterio1.csv");
 }
@@ -494,19 +493,19 @@ template <class T>
 void Repositorio<T>::listarColumnas(const string& nombreArchivo) {
     fstream* archivo = new fstream(nombreArchivo, ios_base::out);
     clock_t start;
-    vector<T*>* desordenado = new vector<T*>*();
-    desordenado = elementos;
+    vector<T*>* desordenado = new vector<T*>();
+    *desordenado = *elementos;
     double duration;
     start = clock();
 
-    ordenarConQuicksort2(0, size()-1);
+    ordenarConQuicksort2(*desordenado,0, size()-1);
 
     duration = (clock() - start)/(double) CLOCKS_PER_SEC;
 
     cout<<"Quicksort: "<<duration<<" seconds"<<endl;
 
     if (archivo) {
-        for (Transaccion* transaccion : *deserializador->getElementos()) {
+        for (Transaccion* transaccion : *desordenado) {
             *archivo << serializador->Serializar(transaccion,",") << endl;
         }
         archivo->close();
@@ -519,19 +518,19 @@ template <class T>
 void Repositorio<T>::listarColumnas2(const string& nombreArchivo) {
     fstream* archivo = new fstream(nombreArchivo, ios_base::out);
     clock_t start;
-    vector<T*>* desordenado = new vector<T*>*();
-    desordenado = elementos;
+    vector<T*>* desordenado = new vector<T*>();
+    *desordenado = *elementos;
     double duration;
     start = clock();
 
-    ordenarConMergesort2(0, size()-1);
+    ordenarConMergesort2( *desordenado,0, size()-1);
 
     duration = (clock() - start)/(double) CLOCKS_PER_SEC;
 
     cout<<"Mergesort: "<<duration<<" seconds"<<endl;
 
     if (archivo) {
-        for (Transaccion* transaccion : *deserializador->getElementos()) {
+        for (Transaccion* transaccion : *desordenado) {
             *archivo << serializador->Serializar(transaccion,",") << endl;
         }
         archivo->close();
@@ -591,8 +590,8 @@ void Repositorio<T>::listarColumnas4(const string& nombreArchivo) {
 }
 template <class T>
 void Repositorio<T>::listarCriterio2() {
+    listarColumnas2("mergesortcriterio2.csv");
     listarColumnas("quicksortcriterio2.csv");
-    //listarColumnas2("mergesortcriterio2.csv");
 //    listarColumnas3("shellsortcriterio2.csv");
 //    listarColumnas4("heapsortcriterio2.csv");
 }
