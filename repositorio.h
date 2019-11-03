@@ -46,7 +46,7 @@ public:
     void listarCriterio2();
 
 
-    void ordenarConQuicksort(vector<T> &transacciones, int inicio, int final);
+    void ordenarConQuicksort(vector<T*> &transacciones, int inicio, int final);
     void ordenarConQuicksort2(int inicio, int final);
 
     void merge(int left, int middle, int right);
@@ -388,7 +388,7 @@ void Repositorio<T>::listarTradeUsdQ(const string& nombreArchivo) {
     desordenado = elementos;
     start = clock();
 
-    ordenarConQuicksort(desordenado,0, size()-1);
+    ordenarConQuicksort(*desordenado,0, size()-1);
 
     duration = (clock() - start)/(double) CLOCKS_PER_SEC;
 
