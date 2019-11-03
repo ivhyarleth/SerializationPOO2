@@ -52,13 +52,13 @@ public:
     void merge2(vector<Transaccion*> &transacciones, int left, int middle, int right);
     void ordenarConMergesort2(vector<Transaccion*> &transacciones, int left, int right);
 
-    void ordenarConShellsort(int size);
-    void ordenarConShellsort2(int size);
+    void ordenarConShellsort(vector<T*> &transacciones, int size);
+    void ordenarConShellsort2(vector<Transaccion*> &transacciones, int size);
 
-    void heap(int size, int node);
-    void ordenarConHeapsort(int size);
-    void heap2(int size, int node);
-    void ordenarConHeapsort2(int size);
+    void heap(vector<T*> &transacciones, int size, int node);
+    void ordenarConHeapsort(vector<T*> &transacciones, int size);
+    void heap2(vector<Transaccion*> &transacciones, int size, int node);
+    void ordenarConHeapsort2(vector<Transaccion*> &transacciones, int size);
 
     void printMap(string nombreArchivo, map<string, long long int> mapa);
     void printTotalTradeUsdByCountryOrArea_year();
@@ -279,29 +279,29 @@ void Repositorio<T>::ordenarConMergesort2(vector<Transaccion*> &transacciones, i
 // Shellsort criterio 1:
 
 template <class T>
-void Repositorio<T>::ordenarConShellsort(int size){
+void Repositorio<T>::ordenarConShellsort(vector<T*> &transacciones, int size){
 
     for (int gap = size/2; gap > 0; gap /= 2) {
         for (int i = gap; i < size; ++i) {
-            auto temp = elementos->at(i);
+            auto temp = transacciones[i];
             int j;
-            for (j = i; j >= gap && elementos->at(j-gap)->getTradeUsd() < temp->getTradeUsd(); j -= gap)
-                swap(elementos->at(j), elementos->at(j-gap));
+            for (j = i; j >= gap && transacciones[j-gap]->getTradeUsd() < temp->getTradeUsd(); j -= gap)
+                swap(transacciones[j], transacciones[j-gap]);
         }
     }
 }
 //Shellsort criterio 2:
 template <class T>
-void Repositorio<T>::ordenarConShellsort2(int size){
+void Repositorio<T>::ordenarConShellsort2(vector<Transaccion*> &transacciones, int size){
 
     for (int gap = size/2; gap > 0; gap /= 2) {
         for (int i = gap; i < size; ++i) {
-            auto temp = elementos->at(i);
+            auto temp = transacciones[i];
             int j;
-            for (j = i; (j >= gap) && (elementos->at(j-gap)->getCountryArea() < temp->getCountryArea()
-                                       || (elementos->at(j-gap)->getCountryArea() == temp->getCountryArea() && elementos->at(j-gap)->getYear() < temp->getYear())
-                                       || (elementos->at(j-gap)->getCountryArea() == temp->getCountryArea() && elementos->at(j-gap)->getYear() == temp->getYear() && elementos->at(j-gap)->getTradeUsd() < temp->getTradeUsd())); j -= gap)
-                swap(elementos->at(j), elementos->at(j-gap));
+            for (j = i; (j >= gap) && (transacciones[j-gap]->getCountryArea() < temp->getCountryArea()
+                                       || (transacciones[j-gap]->getCountryArea() == temp->getCountryArea() && transacciones[j-gap]->getYear() < temp->getYear())
+                                       || (transacciones[j-gap]->getCountryArea() == temp->getCountryArea() && transacciones[j-gap]->getYear() == temp->getYear() && transacciones[j-gap]->getTradeUsd() < temp->getTradeUsd())); j -= gap)
+                swap(transacciones[j], transacciones[j-gap]);
         }
     }
 }
@@ -309,68 +309,67 @@ void Repositorio<T>::ordenarConShellsort2(int size){
 
 
 //                                       HEAPSORT
-
 // Heapsort criterio 1:
 
 template <class T>
-void Repositorio<T>::heap(int size, int node){
+void Repositorio<T>::heap(vector<T*> &transacciones, int size, int node){
 
-        int smallest = node;
-        int l = 2*node + 1;
-        int r = 2*node + 2;
-        if (l < size && elementos->at(l)->getTradeUsd() < elementos->at(smallest)->getTradeUsd())
-            smallest = l;
-        if (r < size && elementos->at(r)->getTradeUsd() < elementos->at(smallest)->getTradeUsd())
-            smallest = r;
+    int smallest = node;
+    int l = 2*node + 1;
+    int r = 2*node + 2;
+    if (l < size && transacciones[l]->getTradeUsd() < transacciones[smallest]->getTradeUsd())
+        smallest = l;
+    if (r < size && transacciones[r]->getTradeUsd() < transacciones[smallest]->getTradeUsd())
+        smallest = r;
 
-        if (smallest != node) {
-            swap(elementos->at(node), elementos->at(smallest));
-            heap(size, smallest);
-        }
+    if (smallest != node) {
+        swap(transacciones[node], transacciones[smallest]);
+        heap(transacciones,size, smallest);
+    }
 }
 
 template <class T>
-void Repositorio<T>::ordenarConHeapsort(int size){
+void Repositorio<T>::ordenarConHeapsort(vector<T*> &transacciones, int size){
     for (int i = size / 2 - 1; i >= 0; --i)
-        heap(size, i);
+        heap(transacciones, size, i);
     for (int i = size-1; i >= 0; --i)
     {
-        swap(elementos->at(0), elementos->at(i));
-        heap( i, 0);
+        swap(transacciones[0], transacciones[i]);
+        heap( transacciones, i, 0);
     }
 }
 
 // Heapsort criterio 2:
 
 template <class T>
-void Repositorio<T>::heap2(int size, int node){
+void Repositorio<T>::heap2(vector<Transaccion*> &transacciones, int size, int node){
 
     int smallest = node;
     int l = 2*node + 1;
     int r = 2*node + 2;
-    if (l < size && (elementos->at(l)->getCountryArea() < elementos->at(smallest)->getCountryArea()
-    || (elementos->at(l)->getCountryArea() == elementos->at(smallest)->getCountryArea() && elementos->at(l)->getYear() < elementos->at(smallest)->getYear())
-    || (elementos->at(l)->getCountryArea() == elementos->at(smallest)->getCountryArea() && elementos->at(l)->getYear() == elementos->at(smallest)->getYear() && elementos->at(l)->getTradeUsd() < elementos->at(smallest)->getTradeUsd())))
+    if (l < size && (transacciones[l]->getCountryArea() < transacciones[smallest]->getCountryArea()
+    || (transacciones[l]->getCountryArea() == transacciones[smallest]->getCountryArea() && transacciones[l]->getYear() < transacciones[smallest]->getYear())
+    || (transacciones[l]->getCountryArea() == transacciones[smallest]->getCountryArea() && transacciones[l]->getYear() == transacciones[smallest]->getYear() && transacciones[l]->getTradeUsd() < transacciones[smallest]->getTradeUsd())))
         smallest = l;
-    if (r < size && (elementos->at(r)->getCountryArea() < elementos->at(smallest)->getCountryArea()
-        || (elementos->at(r)->getCountryArea() == elementos->at(smallest)->getCountryArea() && elementos->at(r)->getYear() < elementos->at(smallest)->getYear())
-        || (elementos->at(r)->getCountryArea() == elementos->at(smallest)->getCountryArea() && elementos->at(r)->getYear() == elementos->at(smallest)->getYear() && elementos->at(l)->getTradeUsd() < elementos->at(smallest)->getTradeUsd())))
+    if (r < size && (transacciones[r]->getCountryArea() < transacciones[smallest]->getCountryArea()
+        || (transacciones[r]->getCountryArea() == transacciones[smallest]->getCountryArea() && transacciones[r]->getYear() < transacciones[smallest]->getYear())
+        || (transacciones[r]->getCountryArea() == transacciones[smallest]->getCountryArea() && transacciones[r]->getYear() == transacciones[smallest]->getYear() && transacciones[l]->getTradeUsd() < transacciones[smallest]->getTradeUsd())))
         smallest = r;
 
     if (smallest != node) {
-        swap(elementos->at(node), elementos->at(smallest));
-        heap(size, smallest);
+        swap(transacciones[node], transacciones[smallest]);
+        heap(transacciones,size, smallest);
     }
 }
 
 template <class T>
-void Repositorio<T>::ordenarConHeapsort2(int size){
+void Repositorio<T>::ordenarConHeapsort2(vector<Transaccion*> &transacciones, int size){
     for (int i = size / 2 - 1; i >= 0; --i)
-        heap2(size, i);
+        heap2(transacciones,size, i);
     for (int i = size-1; i >= 0; --i)
     {
-        swap(elementos->at(0), elementos->at(i));
-        heap2( i, 0);
+        swap(transacciones[0], transacciones[i]);
+        heap2(transacciones, i, 0);
     }
 }
 
@@ -435,17 +434,17 @@ void Repositorio<T>::listarTradeUsdS(const string& nombreArchivo) {
     clock_t start;
     double duration;
     vector<T*>* desordenado = new vector<T*>();
-    *desordenado = elementos;
+    *desordenado = *elementos;
     start = clock();
 
-    ordenarConShellsort(elementos->size());
+    ordenarConShellsort(*desordenado,elementos->size());
 
     duration = (clock() - start)/(double) CLOCKS_PER_SEC;
 
     cout<<"Shellsort: "<<duration<<" seconds"<<endl;
 
     if (archivo) {
-        for (Transaccion* transaccion : *deserializador->getElementos()) {
+        for (Transaccion* transaccion : *desordenado) {
             *archivo << serializador->Serializar(transaccion,",") << endl;
         }
         archivo->close();
@@ -459,18 +458,18 @@ void Repositorio<T>::listarTradeUsdH(const string& nombreArchivo) {
     fstream* archivo = new fstream(nombreArchivo, ios_base::out);
     clock_t start;
     vector<T*>* desordenado = new vector<T*>();
-    desordenado = elementos;
+    *desordenado = *elementos;
     double duration;
     start = clock();
 
-    ordenarConHeapsort(elementos->size());
+    ordenarConHeapsort(*desordenado,elementos->size());
 
     duration = (clock() - start)/(double) CLOCKS_PER_SEC;
 
     cout<<"Heapsort: "<<duration<<" seconds"<<endl;
 
     if (archivo) {
-        for (Transaccion* transaccion : *deserializador->getElementos()) {
+        for (Transaccion* transaccion : *desordenado) {
             *archivo << serializador->Serializar(transaccion,",") << endl;
         }
         archivo->close();
@@ -484,9 +483,8 @@ void Repositorio<T>::listarCriterio1() {
 
     listarTradeUsdQ("quicksortcriterio1.csv");
     listarTradeUsdM("mergesortcriterio1.csv");
-
-    //listarTradeUsdS("shellsortcriterio1.csv");
-    //listarTradeUsdH("heapsortcriterio1.csv");
+    listarTradeUsdS("shellsortcriterio1.csv");
+    listarTradeUsdH("heapsortcriterio1.csv");
 }
 
 // Listar segundo criterio:
@@ -545,19 +543,19 @@ template <class T>
 void Repositorio<T>::listarColumnas3(const string& nombreArchivo) {
     fstream* archivo = new fstream(nombreArchivo, ios_base::out);
     clock_t start;
-    vector<T*>* desordenado = new vector<T*>*();
-    desordenado = elementos;
+    vector<T*>* desordenado = new vector<T*>();
+    *desordenado = *elementos;
     double duration;
     start = clock();
 
-    ordenarConShellsort2(elementos->size());
+    ordenarConShellsort2(*desordenado,elementos->size());
 
     duration = (clock() - start)/(double) CLOCKS_PER_SEC;
 
     cout<<"Shellsort: "<<duration<<" seconds"<<endl;
 
     if (archivo) {
-        for (Transaccion* transaccion : *deserializador->getElementos()) {
+        for (Transaccion* transaccion : *desordenado) {
             *archivo << serializador->Serializar(transaccion,",") << endl;
         }
         archivo->close();
@@ -571,18 +569,18 @@ template <class T>
 void Repositorio<T>::listarColumnas4(const string& nombreArchivo) {
     fstream* archivo = new fstream(nombreArchivo, ios_base::out);
     clock_t start;
-    vector<T*>* desordenado = new vector<T*>*();
-    *desordenado = elementos;
+    vector<T*>* desordenado = new vector<T*>();
+    *desordenado = *elementos;
     double duration;
     start = clock();
-    ordenarConHeapsort2(elementos->size());
+    ordenarConHeapsort2(*desordenado,elementos->size());
 
     duration = (clock() - start)/(double) CLOCKS_PER_SEC;
 
     cout<<"Heapsort: "<<duration<<" seconds"<<endl;
 
     if (archivo) {
-        for (Transaccion* transaccion : *deserializador->getElementos()) {
+        for (Transaccion* transaccion : *desordenado) {
             *archivo << serializador->Serializar(transaccion,",") << endl;
         }
         archivo->close();
@@ -595,9 +593,8 @@ void Repositorio<T>::listarCriterio2() {
 
     listarColumnas("quicksortcriterio2.csv");
     listarColumnas2("mergesortcriterio2.csv");
-
-//    listarColumnas3("shellsortcriterio2.csv");
-//    listarColumnas4("heapsortcriterio2.csv");
+    listarColumnas3("shellsortcriterio2.csv");
+    listarColumnas4("heapsortcriterio2.csv");
 }
 
 
