@@ -481,8 +481,8 @@ void Repositorio<T>::listarTradeUsdH(const string& nombreArchivo) {
 template <class T>
 void Repositorio<T>::listarCriterio1() {
 
-    listarTradeUsdQ("quicksortcriterio1.csv");
-    listarTradeUsdM("mergesortcriterio1.csv");
+    //listarTradeUsdQ("quicksortcriterio1.csv");
+    //listarTradeUsdM("mergesortcriterio1.csv");
     listarTradeUsdS("shellsortcriterio1.csv");
     listarTradeUsdH("heapsortcriterio1.csv");
 }
@@ -591,8 +591,8 @@ void Repositorio<T>::listarColumnas4(const string& nombreArchivo) {
 template <class T>
 void Repositorio<T>::listarCriterio2() {
 
-    listarColumnas("quicksortcriterio2.csv");
-    listarColumnas2("mergesortcriterio2.csv");
+    //listarColumnas("quicksortcriterio2.csv");
+    //listarColumnas2("mergesortcriterio2.csv");
     listarColumnas3("shellsortcriterio2.csv");
     listarColumnas4("heapsortcriterio2.csv");
 }
